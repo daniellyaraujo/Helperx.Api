@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "Helperx.Consumer.Jobs": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
