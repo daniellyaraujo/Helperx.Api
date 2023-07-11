@@ -1,7 +1,10 @@
-﻿using Helper.Domain.Interfaces.Repository;
+﻿using AutoMapper;
 using Helperx.Application.Services;
 using Helperx.Infra.Data;
 using Helperx.Infra.Data.Repository;
+using Helperz.Application.Contracts;
+using Helperz.Domain.Entities;
+using Helperz.Domain.Interfaces.Repository;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
@@ -20,31 +23,33 @@ namespace Helperx.Api.Configuration
 
             serviceCollection.AddSingleton(serviceProvider =>
             {
-                string connectionString = configuration["ServiceBus:ConnectionString"];
-                return new QueueClient(connectionString, "NomeDaFila");
+                return new QueueClient(configuration["ServiceBusQueue:ConnectionString"], configuration["ServiceBusQueue:QueueName"]);
             });
 
             serviceCollection.AddSignalR();
 
-            //serviceCollection.AddDbContext<JobContext>(
-            //    options => options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
-
-            //serviceCollection.AddHealthChecks()
-            //                  .AddSqlServer(connectionString: configuration.GetConnectionString("SqlServer")!,
-            //                     name: "SQL Server Instance");
-
             //Services
             serviceCollection.AddScoped<IHelperService, HelperService>();
             serviceCollection.AddScoped<IQueueSenderService, QueueSenderService>();
-            serviceCollection.AddScoped<IHelperService, HelperService>();
 
             //Job Context
-            serviceCollection.AddSingleton<JobContext>();
+            serviceCollection.AddScoped<JobContext>();
+            serviceCollection.AddScoped<NotificationHubService>();
+
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<JobRequest, Job>();
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            serviceCollection.AddSingleton(mapper);
+
 
             //Repository
             serviceCollection.AddScoped<IJobRepository, JobRepository>();
 
-            //Swagger
+            serviceCollection.AddEndpointsApiExplorer();
+;            //Swagger
             serviceCollection.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nome da API", Version = "v1" });

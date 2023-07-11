@@ -13,10 +13,9 @@ namespace Helperx.Infra.Data
         {
             
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public JobContext()
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(JobContext).Assembly);
+
         }
     }
 }

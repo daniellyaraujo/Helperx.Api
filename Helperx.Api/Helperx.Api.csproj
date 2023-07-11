@@ -6,18 +6,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>410b88ed-ccc2-457c-91c7-2712f0ccc464</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Helper.Domain\Helperx.Domain.csproj" />
-    <ProjectReference Include="..\Helperx.Application\Helperx.Application.csproj" />
-    <ProjectReference Include="..\Helperx.Infra.Data\Helperx.Infra.Data.csproj" />
+    <ProjectReference Include="..\Helperz.Application\Helperz.Application.csproj" />
+    <ProjectReference Include="..\Helperz.Infra.Data\Helperz.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

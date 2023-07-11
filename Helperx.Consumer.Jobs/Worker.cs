@@ -1,35 +1,19 @@
-using Helperx.Application.ConsumerServices;
-using Helperx.Consumer.Jobs.Services;
+using Helperx.Consumer.Jobs.Services.Interfaces;
 
 namespace Helperx.Consumer.Jobs
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IListenerService _listenerService;
 
-        public Worker(ILogger<Worker> logger,
-        IServiceProvider serviceProvider)
+        public Worker(IListenerService listenerService)
         {
-            _serviceProvider = serviceProvider;
-            _logger = logger;
+            _listenerService = listenerService;
         }
 
-        public async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var serviceBusConsumer = scope.ServiceProvider.GetRequiredService<JobListenerService>();
-                await serviceBusConsumer.StartConsumingAsync();
-
-                // Mantenha o Worker em execução
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    await Task.Delay(1000, stoppingToken);
-                }
-
-                await serviceBusConsumer.StopConsumingAsync();
-            }
+            await _listenerService.StartConsumingAsync();
         }
     }
 }

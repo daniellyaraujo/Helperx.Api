@@ -1,4 +1,4 @@
-﻿using Helperx.Application.Contracts.Common;
+﻿using Helperz.Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Helperx.Api.Controllers

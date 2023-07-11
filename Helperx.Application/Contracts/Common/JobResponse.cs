@@ -3,6 +3,6 @@
     public class JobResponse
     {
         public string Message { get; set; }
-        public Helper.Domain.Enums.JobStatus Status { get; set; }
+        public Helperz.Domain.Enums.JobStatus Status { get; set; }
     }
 }

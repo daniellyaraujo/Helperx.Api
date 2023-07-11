@@ -1,14 +1,12 @@
+using Helperx.Application.ConsumerServices;
 using Helperx.Consumer.Jobs;
-using Helperx.Consumer.Jobs.Services;
+using Helperx.Consumer.Jobs.Services.Interfaces;
 
 IHost host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
             {
                 services.AddHostedService<Worker>();
-                services.AddSingleton(provider =>
-                {
-                   return new ServiceBusConsumer(context.Configuration);
-                });
+                services.AddSingleton<IListenerService, ListenerService>();
             })
             .Build();
 

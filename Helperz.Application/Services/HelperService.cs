@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Helperx.Application.Constants;
-using Helperx.Application.Contracts.Common;
+using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Helperz.Domain.Enums;
 using Helperz.Domain.Interfaces.Repository;
@@ -77,7 +77,13 @@ namespace Helperx.Application.Services
             response.Status = Helperz.Domain.Enums.JobStatus.Pending;
             response.Message = JobResponseMessages.CREATED_JOB;
 
-            await _hubContext.SendJobUpdate(jobRequest.ToString());
+            var job = new Job();
+            _mapper.Map(jobRequest, job);
+            job.Id = Guid.NewGuid().ToString();
+
+            await _jobRepository.CreateAsync(job);
+
+            //await _hubContext.SendJobUpdate(jobRequest.ToString());
             return response;
         }
 

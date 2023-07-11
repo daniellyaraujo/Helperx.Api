@@ -1,9 +1,14 @@
+using Helperx.Api.Configuration;
 using Helperx.Application.Services;
+using Helperx.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddApiConfiguration(builder.Configuration);
+builder.Services.AddDbContext<JobContext>((options) => {
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+    });
 
 var app = builder.Build();
 
@@ -18,13 +23,8 @@ if (!app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("swagger/v1/swagger.json", "Helper-X API V1");
-});
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHub<NotificationHubService>("/notificationhub");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Helper-X API V1");
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();
@@ -32,8 +32,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<NotificationHubService>("/notificationhub");
+});
 
-app.MapRazorPages();
+app.UseAuthorization();
 
 app.Run();

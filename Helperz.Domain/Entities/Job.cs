@@ -1,9 +1,8 @@
 ﻿using Helperz.Domain.Enums;
-using Helperz.Domain.Enums;
 
-namespace Helperx.Application.Contracts.Common
+namespace Helperz.Domain.Entities
 {
-    public class JobRequest
+    public class Job
     {
         /// <summary>
         /// Description of what task have to do.
@@ -18,31 +17,16 @@ namespace Helperx.Application.Contracts.Common
         /// <summary>
         /// Time that user schedule your task to be executed.
         /// </summary>
-        public DateTime TimeToExecute { get; set; }
+        public DateTime DateToExecute { get; set; }
 
         /// <summary>
         /// Id to identify the task.
         /// </summary>
-        public string Id { get; private set; }
+        public string? Id { get; set; }
 
         /// <summary>
-        /// 
+        /// Status of task
         /// </summary>
         public JobStatus Status { get; set; }
-
-        /// <summary>
-        /// Sets an ID for the task, to identify it.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void SetTaskId(string id)
-        {
-            if (id is null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            id = Id;
-        }
     }
 }
