@@ -37,7 +37,7 @@ namespace Helperx.Application.Services
             return jobs;
         }
 
-        public async Task<JobResponse> UpdateJobByIdAsync(long jobId, JobRequest jobRequest)
+        public async Task<JobResponse> UpdateJobByIdAsync(Guid jobId, JobRequest jobRequest)
         {
             var response = new JobResponse();
 
@@ -60,7 +60,7 @@ namespace Helperx.Application.Services
             return response;
         }
         
-        public async Task<JobResponse> RemoveJobByIdAsync(long jobId)
+        public async Task<JobResponse> RemoveJobByIdAsync(Guid jobId)
         {
             var response = new JobResponse();
 
@@ -121,7 +121,7 @@ namespace Helperx.Application.Services
             return duplicity;
         }
 
-        public bool VerifyJobById(long jobId)
+        public bool VerifyJobById(Guid jobId)
         {
             bool job = _jobRepository.GetJobs().Any(x => x.Id == jobId);
             return job;

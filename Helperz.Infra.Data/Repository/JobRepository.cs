@@ -17,7 +17,7 @@ namespace Helperx.Infra.Data.Repository
             _jobContext.Dispose();
         }
 
-        public async Task<Job> GetJobByIdAsync(long jobId)
+        public async Task<Job> GetJobByIdAsync(Guid jobId)
         {
             return (Job)_jobContext.Job!.Where(x => x.Id == jobId);
         }

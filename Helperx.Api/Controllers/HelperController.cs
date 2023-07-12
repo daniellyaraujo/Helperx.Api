@@ -61,7 +61,7 @@ namespace Helperx.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutAsync([FromRoute] long id, [FromBody] JobRequest jobDescription)
+        public async Task<IActionResult> PutAsync([FromRoute] Guid id, [FromBody] JobRequest jobDescription)
         {
             var response = await _iHelperService.UpdateJobByIdAsync(id, jobDescription);
             return Response(response);
@@ -75,7 +75,7 @@ namespace Helperx.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteAsync([FromRoute] long id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
         {
             var response = await _iHelperService.RemoveJobByIdAsync(id);
             return Response(response);

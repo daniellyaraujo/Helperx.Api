@@ -23,7 +23,7 @@ namespace Helperx.Api.Configuration
 
             serviceCollection.AddSingleton(serviceProvider =>
             {
-                return new QueueClient(configuration["ServiceBus:ConnectionString"], configuration["ServiceBusQueue:QueueName"]);
+                return new QueueClient(configuration["ServiceBus:ConnectionString"], configuration["ServiceBus:QueueName"]);
             });
 
             serviceCollection.AddSignalR();

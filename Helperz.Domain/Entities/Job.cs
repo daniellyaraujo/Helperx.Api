@@ -1,9 +1,15 @@
 ﻿using Helperz.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Helperz.Domain.Entities
 {
     public class Job
     {
+        public Job()
+        {
+            Id = Guid.NewGuid();
+        }
+
         /// <summary>
         /// Description of what task have to do.
         /// </summary>
@@ -22,7 +28,8 @@ namespace Helperz.Domain.Entities
         /// <summary>
         /// Id to identify the task.
         /// </summary>
-        public long Id { get; }
+        [Key]
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Status of task

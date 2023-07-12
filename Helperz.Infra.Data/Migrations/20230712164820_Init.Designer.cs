@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Helperz.Infra.Data.Migrations
 {
     [DbContext(typeof(JobContext))]
-    [Migration("20230711214008_Initial")]
-    partial class Initial
+    [Migration("20230712164820_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,18 +27,19 @@ namespace Helperz.Infra.Data.Migrations
 
             modelBuilder.Entity("Helperz.Domain.Entities.Job", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Action")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ScheduleTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ScheduleTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
