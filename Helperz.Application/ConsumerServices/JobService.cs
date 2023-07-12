@@ -21,7 +21,7 @@ namespace Helperx.Application.ConsumerServices
 
             if (_helperService.VerifyDuplicityBetwenJobs(baseRequest))
             {
-                response.Status = Helperz.Domain.Enums.JobStatus.Canceled;
+                response.JobStatus = Helperz.Domain.Enums.JobStatus.Canceled;
                 response.Message = JobResponseMessages.DUPLICITY_JOB;
                 await _hubContext.SendJobUpdate(baseRequest.ToString());
                 return response;

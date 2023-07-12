@@ -2,6 +2,9 @@
 
 namespace Helperz.Application.Contracts
 {
+    /// <summary>
+    /// Indicates which properties must be inform to the system to perform the job.
+    /// </summary>
     public class JobRequest
     {
         /// <summary>
@@ -10,7 +13,7 @@ namespace Helperz.Application.Contracts
         public string Description { get; set; }
 
         /// <summary>
-        /// Informs what kinf of action is the job: Create, Update, Delete and Read them all.
+        /// Informs what kinf of action is the job: Create, Update, Delete and Read.
         /// </summary>
         public JobActions Action { get; set; }
 

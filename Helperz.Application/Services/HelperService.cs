@@ -54,7 +54,7 @@ namespace Helperx.Application.Services
                     break;
             }
 
-            response.Status = Helperz.Domain.Enums.JobStatus.Concluded;
+            response.JobStatus = Helperz.Domain.Enums.JobStatus.Concluded;
 
             await _hubContext.SendJobUpdate(jobRequest.ToString());
             return response;
@@ -66,7 +66,7 @@ namespace Helperx.Application.Services
 
             if (VerifyDuplicityBetwenJobs(jobRequest))
             {
-                response.Status = Helperz.Domain.Enums.JobStatus.Canceled;
+                response.JobStatus = Helperz.Domain.Enums.JobStatus.Canceled;
                 response.Message = JobResponseMessages.DUPLICITY_JOB;
                 await _hubContext.SendJobUpdate(jobRequest.ToString());
                 return response;
@@ -74,7 +74,7 @@ namespace Helperx.Application.Services
 
             await _queueSenderService.SendAsync(jobRequest);
 
-            response.Status = Helperz.Domain.Enums.JobStatus.Pending;
+            response.JobStatus = Helperz.Domain.Enums.JobStatus.Pending;
             response.Message = JobResponseMessages.CREATED_JOB;
 
             var job = new Job();
