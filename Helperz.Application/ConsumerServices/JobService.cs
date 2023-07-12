@@ -19,11 +19,11 @@ namespace Helperx.Application.ConsumerServices
         {
             var response = new JobResponse();
 
-            if (_helperService.VerifyDuplicityBetwenJobs(baseRequest))
+            if (_helperService.ChecksForDuplicityInJobDescription(baseRequest))
             {
                 response.JobStatus = Helperz.Domain.Enums.JobStatus.Canceled;
                 response.Message = JobResponseMessages.DUPLICITY_JOB;
-                await _hubContext.SendJobUpdate(baseRequest.ToString());
+                await _hubContext.SendToScreenJobUpdatesAsync(baseRequest.ToString());
                 return response;
             }
 

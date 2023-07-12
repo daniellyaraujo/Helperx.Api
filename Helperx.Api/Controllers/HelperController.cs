@@ -21,7 +21,7 @@ namespace Helperx.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostAsync([FromBody] JobRequest jobDescription)
         {
-            var response = await _iHelperService.SendJobToQueueAsync(jobDescription);
+            var response = await _iHelperService.RegisterNewJobAsync(jobDescription);
             return Response(response);
         }
         

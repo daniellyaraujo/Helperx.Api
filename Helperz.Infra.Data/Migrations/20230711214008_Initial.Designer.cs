@@ -33,7 +33,7 @@ namespace Helperz.Infra.Data.Migrations
                     b.Property<int>("Action")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateToExecute")
+                    b.Property<DateTime>("ScheduleTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")

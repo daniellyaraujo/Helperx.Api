@@ -1,4 +1,4 @@
-﻿using Helperz.Application.Contracts;
+﻿using Helperz.Domain.Entities;
 using Microsoft.Azure.ServiceBus;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace Helperx.Application.Services
             _queueClient = queueClient;
         }
 
-        public async Task SendAsync(JobRequest job)
+        public async Task SendToQueueAsync(Job job)
         {
             var message = new Message(Encoding.UTF8.GetBytes(job.ToString()));
             message.ScheduledEnqueueTimeUtc = job.ScheduleTime;

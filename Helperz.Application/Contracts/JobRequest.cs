@@ -20,6 +20,6 @@ namespace Helperz.Application.Contracts
         /// <summary>
         /// Time that user schedule your job to be executed.
         /// </summary>
-        public DateTime ScheduleTime { get; set; }
+        public DateTime? ScheduleTime { get; set; }
     }
 }

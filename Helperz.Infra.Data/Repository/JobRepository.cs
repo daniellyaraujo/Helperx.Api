@@ -17,6 +17,11 @@ namespace Helperx.Infra.Data.Repository
             _jobContext.Dispose();
         }
 
+        public List<Helperz.Domain.Entities.Job> GetJobById(long jobId)
+        {
+            return (List<Helperz.Domain.Entities.Job>)_jobContext.Job!.Where(x => x.Id == jobId);
+        }
+        
         public List<Helperz.Domain.Entities.Job> GetAllJobs()
         {
             return _jobContext.Job!.ToList();

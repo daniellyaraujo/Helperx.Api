@@ -1,11 +1,13 @@
 ﻿using Helperz.Application.Contracts;
+using Helperz.Domain.Entities;
 
 namespace Helperx.Application.Services
 {
     public interface IHelperService
     {
-        Task<JobResponse> SendJobToQueueAsync(JobRequest createJobRequest);
+        Task<JobResponse> RegisterNewJobAsync(JobRequest createJobRequest);
         Task<JobResponse> ProcessJobAsync(JobRequest createJobRequest);
-        bool VerifyDuplicityBetwenJobs(JobRequest newJob);
+        Task<List<Job>> GetJobByIdAsync(long jobId);
+        bool ChecksForDuplicityInJobDescription(string jobDescription);
     }
 }

@@ -1,9 +1,9 @@
-﻿using Helperz.Application.Contracts;
+﻿using Helperz.Domain.Entities;
 
 namespace Helperx.Application.Services
 {
     public interface IQueueSenderService
     {
-        Task SendAsync(JobRequest job);
+        Task SendToQueueAsync(Job job);
     }
 }

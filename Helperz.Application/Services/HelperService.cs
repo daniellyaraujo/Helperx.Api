@@ -32,71 +32,79 @@ namespace Helperx.Application.Services
 
             _mapper.Map(jobRequest, job);
 
-            switch (jobRequest.Action)
-            {
-                case JobActions.Create:
-                    await _jobRepository.CreateAsync(job);
-                    response.Message = JobResponseMessages.CREATED_JOB;
-                    break;
+            DirectToActionJob(job);
 
-                case JobActions.Delete:
-                    await _jobRepository.DeleteAsync(job);
-                    response.Message = JobResponseMessages.DELETED_JOB;
-                    break;
+            response.JobStatus = JobStatus.Concluded;
 
-                case JobActions.Update:
-                    await _jobRepository.UpdateAsync(job);
-                    response.Message = JobResponseMessages.UPDATED_JOB;
-                    break;
-
-                default:
-                    _jobRepository.GetAllJobs();
-                    break;
-            }
-
-            response.JobStatus = Helperz.Domain.Enums.JobStatus.Concluded;
-
-            await _hubContext.SendJobUpdate(jobRequest.ToString());
+            await _hubContext.SendToScreenJobUpdatesAsync(jobRequest.ToString());
             return response;
         }
 
-        public async Task<JobResponse> SendJobToQueueAsync(JobRequest jobRequest)
+        public async Task<List<Job>> GetJobByIdAsync(long jobId)
+        {
+            var job = _jobRepository.GetJobById(jobId).ToList();
+            return job;
+        }
+
+        public async Task<JobResponse> RegisterNewJobAsync(JobRequest jobRequest)
         {
             var response = new JobResponse();
+            var job = new Job();
 
-            if (VerifyDuplicityBetwenJobs(jobRequest))
+            if (ChecksForDuplicityInJobDescription(jobRequest.Description))
             {
-                response.JobStatus = Helperz.Domain.Enums.JobStatus.Canceled;
+                response.JobStatus = JobStatus.Canceled;
                 response.Message = JobResponseMessages.DUPLICITY_JOB;
-                await _hubContext.SendJobUpdate(jobRequest.ToString());
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+
                 return response;
             }
 
-            await _queueSenderService.SendAsync(jobRequest);
+            if (jobRequest.ScheduleTime == default)
+            {
+                await _queueSenderService.SendToQueueAsync(job);
 
-            response.JobStatus = Helperz.Domain.Enums.JobStatus.Pending;
-            response.Message = JobResponseMessages.CREATED_JOB;
+                response.JobStatus = JobStatus.Pending;
+                response.Message = JobResponseMessages.SENT_JOB_TO_QUEUE;
+                response.StatusCode = System.Net.HttpStatusCode.Created;
+            }
 
-            var job = new Job();
             _mapper.Map(jobRequest, job);
-            job.Id = Guid.NewGuid().ToString();
+            job.Status = JobStatus.Concluded;
 
             await _jobRepository.CreateAsync(job);
+            //await _hubContext.SendToScreenJobUpdatesAsync(jobRequest.ToString());
 
-            //await _hubContext.SendJobUpdate(jobRequest.ToString());
+            response.JobStatus = JobStatus.Concluded;
+            response.StatusCode = System.Net.HttpStatusCode.OK;
+
             return response;
         }
 
-        public bool VerifyDuplicityBetwenJobs(JobRequest newJob)
+        public bool ChecksForDuplicityInJobDescription(string jobDescription)
         {
-            List<Job> jobsRegisters = _jobRepository.GetAllJobs();
-            var duplicity = jobsRegisters.FirstOrDefault(x => x.Description == newJob.Description);
+            bool duplicity = _jobRepository.GetAllJobs().Any(x => x.Description == jobDescription);
+            return duplicity;
+        }
 
-            if (duplicity != null)
+        public async Task DirectToActionJob(Job job)
+        {
+            if (job.Action == JobActions.Create)
             {
-                return true;
+                await _jobRepository.CreateAsync(job);
             }
-            return false;
+            if (job.Action == JobActions.Delete)
+            {
+                await _jobRepository.DeleteAsync(job);
+            }
+            if (job.Action == JobActions.Update)
+            {
+                await _jobRepository.UpdateAsync(job);
+            }
+            if (job.Action == JobActions.Read)
+            {
+                _jobRepository.GetAllJobs();
+            }
         }
     }
 }

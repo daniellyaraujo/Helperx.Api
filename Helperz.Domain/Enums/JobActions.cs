@@ -1,5 +1,8 @@
 ﻿namespace Helperz.Domain.Enums
 {
+    /// <summary>
+    /// Reports the job actions for processing.
+    /// </summary>
     public enum JobActions
     {
         /// <summary>

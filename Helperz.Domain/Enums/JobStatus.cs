@@ -2,6 +2,9 @@
 
 namespace Helperz.Domain.Enums
 {
+    /// <summary>
+    /// Informs the work steps during the process.
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum JobStatus
     {
