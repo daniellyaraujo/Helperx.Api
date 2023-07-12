@@ -17,7 +17,7 @@ namespace Helperz.Domain.Entities
         /// <summary>
         /// Time that user schedule your task to be executed.
         /// </summary>
-        public DateTime? ScheduleTime { get; set; }
+        public DateTime ScheduleTime { get; set; }
 
         /// <summary>
         /// Id to identify the task.
