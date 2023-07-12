@@ -10,7 +10,7 @@ namespace Helperz.Domain.Entities
         public string Description { get; set; }
 
         /// <summary>
-        /// Informs what kinf of action is the task: Creation, Update, Delete and Read them all.
+        /// Informs what kinf of action is the task: Create, Update, Delete and Read them all.
         /// </summary>
         public JobActions Action { get; set; }
 

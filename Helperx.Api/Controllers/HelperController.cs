@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Helperx.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/task")]
+    [Route("api/v1/job")]
     public class HelperController : BaseController
     {
         private readonly IHelperService _iHelperService;
@@ -25,7 +25,7 @@ namespace Helperx.Api.Controllers
             return Response(response);
         }
         
-        [HttpPost("edit/{id}")]
+        [HttpPut("edit/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

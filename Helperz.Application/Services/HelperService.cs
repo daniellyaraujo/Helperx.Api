@@ -34,7 +34,7 @@ namespace Helperx.Application.Services
 
             switch (jobRequest.Action)
             {
-                case JobActions.Creation:
+                case JobActions.Create:
                     await _jobRepository.CreateAsync(job);
                     response.Message = JobResponseMessages.CREATED_JOB;
                     break;

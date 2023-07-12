@@ -16,7 +16,7 @@ namespace Helperx.Application.Services
         public async Task SendAsync(JobRequest job)
         {
             var message = new Message(Encoding.UTF8.GetBytes(job.ToString()));
-            message.ScheduledEnqueueTimeUtc = job.TimeToExecute;
+            message.ScheduledEnqueueTimeUtc = job.ScheduleTime;
             await _queueClient.SendAsync(message);
         }
     }

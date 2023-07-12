@@ -1,24 +1,22 @@
 ﻿using Helperz.Domain.Enums;
-using Helperz.Domain.Enums;
-using Newtonsoft.Json;
 
 namespace Helperz.Application.Contracts
 {
     public class JobRequest
     {
         /// <summary>
-        /// Description of what task have to do.
+        /// Description of what job have to do.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Informs what kinf of action is the task: Creation, Update, Delete and Read them all.
+        /// Informs what kinf of action is the job: Create, Update, Delete and Read them all.
         /// </summary>
         public JobActions Action { get; set; }
 
         /// <summary>
-        /// Time that user schedule your task to be executed.
+        /// Time that user schedule your job to be executed.
         /// </summary>
-        public DateTime TimeToExecute { get; set; }
+        public DateTime ScheduleTime { get; set; }
     }
 }
