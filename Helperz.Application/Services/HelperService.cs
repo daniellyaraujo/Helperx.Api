@@ -105,6 +105,7 @@ namespace Helperx.Application.Services
 
             _mapper.Map(jobRequest, job);
             job.Status = JobStatus.Concluded;
+            job.ScheduleTime = jobRequest.ScheduleTime;
 
             await _jobRepository.CreateAsync(job);
             //await _hubContext.SendToScreenJobUpdatesAsync(jobRequest.ToString());
@@ -117,6 +118,7 @@ namespace Helperx.Application.Services
 
         public bool ChecksForDuplicityInJobDescription(string jobDescription)
         {
+            
             bool duplicity = _jobRepository.GetJobs().Any(x => x.Description == jobDescription);
             return duplicity;
         }

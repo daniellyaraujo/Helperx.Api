@@ -24,7 +24,7 @@ namespace Helperx.Infra.Data.Repository
         
         public List<Job> GetJobs()
         {
-            return _jobContext.Job!.ToList();
+            return _jobContext.Set<Job>().ToList();
         }
 
         public async Task CreateAsync(Job job, CancellationToken cancellationToken = default)
