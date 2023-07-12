@@ -11,11 +11,20 @@ namespace Helperx.Infra.Data
 
         public JobContext(DbContextOptions<JobContext> options) : base(options)
         {
-            
+
         }
         public JobContext()
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Job>()
+                .Property(j => j.Id)
+                .ValueGeneratedOnAdd();
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

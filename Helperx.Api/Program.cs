@@ -1,14 +1,9 @@
 using Helperx.Api.Configuration;
 using Helperx.Application.Services;
-using Helperx.Infra.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApiConfiguration(builder.Configuration);
-builder.Services.AddDbContext<JobContext>((options) => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
-    });
 
 var app = builder.Build();
 
@@ -35,7 +30,6 @@ app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    endpoints.MapHub<NotificationHubService>("/notificationhub");
 });
 
 app.UseAuthorization();

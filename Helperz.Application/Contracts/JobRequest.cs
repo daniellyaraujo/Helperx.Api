@@ -1,6 +1,4 @@
-﻿using Helperz.Domain.Enums;
-
-namespace Helperz.Application.Contracts
+﻿namespace Helperz.Application.Contracts
 {
     /// <summary>
     /// Indicates which properties must be inform to the system to perform the job.
@@ -13,13 +11,13 @@ namespace Helperz.Application.Contracts
         public string Description { get; set; }
 
         /// <summary>
-        /// Informs what kinf of action is the job: Create, Update, Delete and Read.
+        /// Indicates whether the user wants to schedule the job.
         /// </summary>
-        public JobActions Action { get; set; }
+        public bool IsScheduleJob { get; set; }
 
         /// <summary>
         /// Time that user schedule your job to be executed.
         /// </summary>
-        public DateTime ScheduleTime { get; set; }
+        public DateTime? ExecutionTime { get; set; }
     }
 }

@@ -6,12 +6,10 @@ namespace Helperx.Application.ConsumerServices
     public class JobService : IJobService
     {
         private readonly IHelperService _helperService;
-        private readonly NotificationHubService _hubContext;
 
-        public JobService(IHelperService helperService, NotificationHubService hubContext)
+        public JobService(IHelperService helperService)
         {
             _helperService = helperService;
-            _hubContext = hubContext;
         }
 
         public async Task RunJobAsync(JobRequest baseRequest)

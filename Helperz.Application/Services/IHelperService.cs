@@ -7,10 +7,10 @@ namespace Helperx.Application.Services
     {
         Task<List<Job>> GetAllJobsAsync();
         Task<JobResponse> RegisterNewJobAsync(JobRequest jobRequest);
-        Task ProcessJobAsync(JobRequest jobRequest);
-        Task<JobResponse> UpdateJobByIdAsync(Guid jobId, JobRequest jobRequest);
-        Task<JobResponse> RemoveJobByIdAsync(Guid jobId);
+        Task ProcessJobAsync(object jobRequest);
+        Task<JobResponse> UpdateJobByIdAsync(int jobId, JobRequest jobRequest);
+        Task<JobResponse> RemoveJobByIdAsync(int jobId);
         bool ChecksForDuplicityInJobDescription(string jobDescription);
-        bool VerifyJobById(Guid jobId);
+        bool VerifyJobById(int jobId);
     }
 }

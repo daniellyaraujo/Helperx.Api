@@ -6,6 +6,7 @@ using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Helperz.Domain.Interfaces.Repository;
 using Microsoft.Azure.ServiceBus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -30,11 +31,11 @@ namespace Helperx.Api.Configuration
 
             //Services
             serviceCollection.AddScoped<IHelperService, HelperService>();
-            serviceCollection.AddScoped<IQueueSenderService, QueueSenderService>();
 
             //Job Context
-            serviceCollection.AddScoped<JobContext>();
-            serviceCollection.AddScoped<NotificationHubService>();
+            serviceCollection.AddDbContext<JobContext>((options) => {
+                options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
+            });
 
             var mapperConfig = new MapperConfiguration(cfg =>
             {
@@ -44,7 +45,6 @@ namespace Helperx.Api.Configuration
             IMapper mapper = mapperConfig.CreateMapper();
             serviceCollection.AddSingleton(mapper);
 
-
             //Repository
             serviceCollection.AddScoped<IJobRepository, JobRepository>();
 
@@ -52,7 +52,7 @@ namespace Helperx.Api.Configuration
 ;            //Swagger
             serviceCollection.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nome da API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Helper X Api", Version = "v1" });
 
                 // Configuração para incluir os comentários XML da documentação do projeto
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

@@ -1,14 +1,16 @@
 ﻿using Helperz.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Helperz.Domain.Entities
 {
     public class Job
     {
-        public Job()
-        {
-            Id = Guid.NewGuid();
-        }
+        /// <summary>
+        /// Id to identify the task.
+        /// </summary>
+        [Key]
+        public int Id { get; }
 
         /// <summary>
         /// Description of what task have to do.
@@ -21,15 +23,14 @@ namespace Helperz.Domain.Entities
         public JobActions Action { get; set; }
 
         /// <summary>
-        /// Time that user schedule your task to be executed.
+        /// Indicates whether the user wants to schedule the job.
         /// </summary>
-        public DateTime ScheduleTime { get; set; }
+        public bool IsScheduleJob { get; set; }
 
         /// <summary>
-        /// Id to identify the task.
+        /// Time that user schedule your task to be executed.
         /// </summary>
-        [Key]
-        public Guid Id { get; set; }
+        public DateTime ExecutionTime { get; set; }
 
         /// <summary>
         /// Status of task

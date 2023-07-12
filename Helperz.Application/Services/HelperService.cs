@@ -11,23 +11,20 @@ namespace Helperx.Application.Services
     public class HelperService : IHelperService
     {
         private readonly IJobRepository _jobRepository;
-        private readonly IQueueSenderService _queueSenderService;
-        private readonly NotificationHubService _hubContext;
         private readonly IMapper _mapper;
 
         public HelperService(IJobRepository jobRepository,
-            IQueueSenderService queueSenderService,
-            NotificationHubService hubContext,
             IMapper mapper)
         {
             _jobRepository = jobRepository;
-            _queueSenderService = queueSenderService;
-            _hubContext = hubContext;
             _mapper = mapper;
         }
 
-        public async Task ProcessJobAsync(JobRequest jobRequest)
+        public async Task ProcessJobAsync(object jobFromQueue)
         {
+            var jobRequest = new JobRequest();
+            _mapper.Map(jobFromQueue, jobRequest);
+            
             await RegisterNewJobAsync(jobRequest);
         }
 
@@ -37,7 +34,7 @@ namespace Helperx.Application.Services
             return jobs;
         }
 
-        public async Task<JobResponse> UpdateJobByIdAsync(Guid jobId, JobRequest jobRequest)
+        public async Task<JobResponse> UpdateJobByIdAsync(int jobId, JobRequest jobRequest)
         {
             var response = new JobResponse();
 
@@ -50,17 +47,22 @@ namespace Helperx.Application.Services
                 return response;
             }
 
+            if (job.Status == JobStatus.Pending)
+            {
+                //ver como cancelar na fila e enviar dnv
+            }
+
             job.Status = JobStatus.Concluded;
             job.Description = jobRequest.Description;
-            job.ScheduleTime = jobRequest.ScheduleTime;
-            job.Action = jobRequest.Action;
+            job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
+            job.Action = JobActions.Update;
 
             await _jobRepository.UpdateAsync(job);
 
             return response;
         }
         
-        public async Task<JobResponse> RemoveJobByIdAsync(Guid jobId)
+        public async Task<JobResponse> RemoveJobByIdAsync(int jobId)
         {
             var response = new JobResponse();
 
@@ -83,6 +85,7 @@ namespace Helperx.Application.Services
         {
             var response = new JobResponse();
             var job = new Job();
+            _mapper.Map(jobRequest, job);
 
             if (ChecksForDuplicityInJobDescription(jobRequest.Description))
             {
@@ -93,28 +96,30 @@ namespace Helperx.Application.Services
                 return response;
             }
 
-            if (jobRequest.ScheduleTime != default)
+            if (jobRequest.IsScheduleJob)
             {
-                await _queueSenderService.SendToQueueAsync(job);
+                await _jobRepository.CreateAsync(job);
 
                 response.JobStatus = JobStatus.Pending;
                 response.Message = JobResponseMessages.SENT_JOB_TO_QUEUE;
                 response.StatusCode = HttpStatusCode.Created;
+
+                //await _queueSenderService.SendToQueueAsync(job);
+
                 return response;
             }
 
-            _mapper.Map(jobRequest, job);
             job.Status = JobStatus.Concluded;
-            job.ScheduleTime = jobRequest.ScheduleTime;
+            job.IsScheduleJob = jobRequest.IsScheduleJob;
+            job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
+            job.Action = JobActions.Create;
 
             await _jobRepository.CreateAsync(job);
-            //await _hubContext.SendToScreenJobUpdatesAsync(jobRequest.ToString());
 
             response.JobStatus = JobStatus.Concluded;
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }
-
 
         public bool ChecksForDuplicityInJobDescription(string jobDescription)
         {
@@ -123,7 +128,7 @@ namespace Helperx.Application.Services
             return duplicity;
         }
 
-        public bool VerifyJobById(Guid jobId)
+        public bool VerifyJobById(int jobId)
         {
             bool job = _jobRepository.GetJobs().Any(x => x.Id == jobId);
             return job;
