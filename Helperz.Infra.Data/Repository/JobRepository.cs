@@ -1,4 +1,4 @@
-﻿using Helperz.Domain.Interfaces.Repository;
+﻿using Helperz.Domain.Entities;
 using Helperz.Domain.Interfaces.Repository;
 
 namespace Helperx.Infra.Data.Repository
@@ -17,29 +17,29 @@ namespace Helperx.Infra.Data.Repository
             _jobContext.Dispose();
         }
 
-        public List<Helperz.Domain.Entities.Job> GetJobById(long jobId)
+        public async Task<Job> GetJobByIdAsync(long jobId)
         {
-            return (List<Helperz.Domain.Entities.Job>)_jobContext.Job!.Where(x => x.Id == jobId);
+            return (Job)_jobContext.Job!.Where(x => x.Id == jobId);
         }
         
-        public List<Helperz.Domain.Entities.Job> GetAllJobs()
+        public List<Job> GetJobs()
         {
             return _jobContext.Job!.ToList();
         }
 
-        public async Task CreateAsync(Helperz.Domain.Entities.Job job, CancellationToken cancellationToken = default)
+        public async Task CreateAsync(Job job, CancellationToken cancellationToken = default)
         {
             await _jobContext.Job!.AddAsync(job, cancellationToken);
             await _jobContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Helperz.Domain.Entities.Job job, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(Job job, CancellationToken cancellationToken = default)
         {
             _jobContext.Job!.Update(job);
             await _jobContext.SaveChangesAsync(cancellationToken);
         }
         
-        public async Task DeleteAsync(Helperz.Domain.Entities.Job job, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Job job, CancellationToken cancellationToken = default)
         {
             _jobContext.Job!.Remove(job);
             await _jobContext.SaveChangesAsync(cancellationToken);

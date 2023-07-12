@@ -4,6 +4,7 @@ using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Helperz.Domain.Enums;
 using Helperz.Domain.Interfaces.Repository;
+using System.Net;
 
 namespace Helperx.Application.Services
 {
@@ -25,25 +26,57 @@ namespace Helperx.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<JobResponse> ProcessJobAsync(JobRequest jobRequest)
+        public async Task ProcessJobAsync(JobRequest jobRequest)
         {
-            var response = new JobResponse();
-            var job = new Job();
-
-            _mapper.Map(jobRequest, job);
-
-            DirectToActionJob(job);
-
-            response.JobStatus = JobStatus.Concluded;
-
-            await _hubContext.SendToScreenJobUpdatesAsync(jobRequest.ToString());
-            return response;
+            await RegisterNewJobAsync(jobRequest);
         }
 
-        public async Task<List<Job>> GetJobByIdAsync(long jobId)
+        public async Task<List<Job>> GetAllJobsAsync()
         {
-            var job = _jobRepository.GetJobById(jobId).ToList();
-            return job;
+            List<Job> jobs = _jobRepository.GetJobs();
+            return jobs;
+        }
+
+        public async Task<JobResponse> UpdateJobByIdAsync(long jobId, JobRequest jobRequest)
+        {
+            var response = new JobResponse();
+
+            Job job = await _jobRepository.GetJobByIdAsync(jobId);
+
+            if (job.Description == null)
+            {
+                response.Message = JobResponseMessages.NOT_FOUND_JOB;
+                response.StatusCode = HttpStatusCode.BadRequest;
+                return response;
+            }
+
+            job.Status = JobStatus.Concluded;
+            job.Description = jobRequest.Description;
+            job.ScheduleTime = jobRequest.ScheduleTime;
+            job.Action = jobRequest.Action;
+
+            await _jobRepository.UpdateAsync(job);
+
+            return response;
+        }
+        
+        public async Task<JobResponse> RemoveJobByIdAsync(long jobId)
+        {
+            var response = new JobResponse();
+
+            Job job = await _jobRepository.GetJobByIdAsync(jobId);
+            if (job.Description != null)
+            {
+                response.Message = JobResponseMessages.NOT_FOUND_JOB;
+                response.StatusCode = HttpStatusCode.BadRequest;
+                return response;
+            }
+
+            await _jobRepository.DeleteAsync(job);
+
+            response.JobStatus = JobStatus.Concluded;
+            response.StatusCode = HttpStatusCode.OK;
+            return response;
         }
 
         public async Task<JobResponse> RegisterNewJobAsync(JobRequest jobRequest)
@@ -55,18 +88,19 @@ namespace Helperx.Application.Services
             {
                 response.JobStatus = JobStatus.Canceled;
                 response.Message = JobResponseMessages.DUPLICITY_JOB;
-                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                response.StatusCode = HttpStatusCode.BadRequest;
 
                 return response;
             }
 
-            if (jobRequest.ScheduleTime == default)
+            if (jobRequest.ScheduleTime != default)
             {
                 await _queueSenderService.SendToQueueAsync(job);
 
                 response.JobStatus = JobStatus.Pending;
                 response.Message = JobResponseMessages.SENT_JOB_TO_QUEUE;
-                response.StatusCode = System.Net.HttpStatusCode.Created;
+                response.StatusCode = HttpStatusCode.Created;
+                return response;
             }
 
             _mapper.Map(jobRequest, job);
@@ -76,35 +110,21 @@ namespace Helperx.Application.Services
             //await _hubContext.SendToScreenJobUpdatesAsync(jobRequest.ToString());
 
             response.JobStatus = JobStatus.Concluded;
-            response.StatusCode = System.Net.HttpStatusCode.OK;
-
+            response.StatusCode = HttpStatusCode.OK;
             return response;
         }
 
+
         public bool ChecksForDuplicityInJobDescription(string jobDescription)
         {
-            bool duplicity = _jobRepository.GetAllJobs().Any(x => x.Description == jobDescription);
+            bool duplicity = _jobRepository.GetJobs().Any(x => x.Description == jobDescription);
             return duplicity;
         }
 
-        public async Task DirectToActionJob(Job job)
+        public bool VerifyJobById(long jobId)
         {
-            if (job.Action == JobActions.Create)
-            {
-                await _jobRepository.CreateAsync(job);
-            }
-            if (job.Action == JobActions.Delete)
-            {
-                await _jobRepository.DeleteAsync(job);
-            }
-            if (job.Action == JobActions.Update)
-            {
-                await _jobRepository.UpdateAsync(job);
-            }
-            if (job.Action == JobActions.Read)
-            {
-                _jobRepository.GetAllJobs();
-            }
+            bool job = _jobRepository.GetJobs().Any(x => x.Id == jobId);
+            return job;
         }
     }
 }
