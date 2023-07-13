@@ -193,6 +193,21 @@ namespace Helperx.Unit.Tests.Repository
             _jobRepositoryMock.Verify(repository => repository.GetByDescriptionAsync(jobDescription), Times.Once);
         }
 
+        [Fact]
+        public async Task ProcessQueueAsync_JobsPendingToProcess_UpdatesJobsToLateStatus()
+        {
+            // Arrange
+            var job1 = new Job {Description = "Job 1", Status = JobStatus.Pending };
+            var job2 = new Job {Description = "Job 2", Status = JobStatus.Pending };
+            _jobRepositoryMock.Setup(repository => repository.GetAllPendingAsync()).Returns(new List<Job> { job1, job2 });
+            _jobRepositoryMock.Setup(repository => repository.UpdatePendingJobsToLateStatusAsync(CancellationToken.None)).Verifiable();
 
+            // Act
+            await _helperService.ProcessQueueAsync();
+
+            // Assert
+            _jobRepositoryMock.Verify(repository => repository.GetAllPendingAsync(), Times.Once);
+            _jobRepositoryMock.Verify(repository => repository.UpdatePendingJobsToLateStatusAsync(CancellationToken.None), Times.Once);
+        }
     }
 }
