@@ -32,10 +32,10 @@ namespace Helperx.Infra.Data.Repository
 
             await _jobContext.SaveChangesAsync(cancellationToken);
         }
-
-        public List<Job> GetAllLateAsync()
+        
+        public List<Job> GetAllPendingAsync()
         {
-            return _jobContext.Job.Where(x => x.Status == JobStatus.Late).OrderBy(x => x.ExecutionTime).ToList();
+            return _jobContext.Job.Where(x => x.Status == JobStatus.Pending).ToList();
         }
 
         public List<Job> GetAll()

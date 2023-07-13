@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Helperx.Application.Constants;
 using Helperx.Application.Contracts;
 using Helperz.Application.Contracts;
@@ -66,6 +67,18 @@ namespace Helperx.Application.Services
 
             _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
             return response;
+        }
+
+        public async Task ProcessQueueAsync()
+        {
+            _logger.LogInformation($"Checking if have a job pending to process.");
+            var job = _jobRepository.GetAllPendingAsync();
+
+            if (job != null)
+            {
+                _logger.LogInformation($"Processing jobs found.");
+               await _jobRepository.UpdatePendingJobsToLateStatusAsync();
+            }
         }
 
         /// <summary>

@@ -11,5 +11,6 @@ namespace Helperx.Application.Services
         Task<JobResponse> UpdateJobByIdAsync(int jobId, UpdateJobRequest jobRequest);
         Task<JobResponse> RemoveJobByIdAsync(int jobId);
         bool ChecksForDuplicityInJobDescription(string jobDescription);
+        Task ProcessQueueAsync();
     }
 }

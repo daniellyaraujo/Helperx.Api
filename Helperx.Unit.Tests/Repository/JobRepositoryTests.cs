@@ -1,6 +1,7 @@
 ﻿using Helperx.Infra.Data;
 using Helperx.Infra.Data.Repository;
 using Helperz.Domain.Entities;
+using Helperz.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Helperx.Unit.Tests.Repository
@@ -81,6 +82,42 @@ namespace Helperx.Unit.Tests.Repository
 
             // Assert
             Assert.Null(deletedJob);
+        }
+
+        [Fact]
+        public void GetByDescriptionAsync_JobExists_ReturnsTrue()
+        {
+            // Arrange
+            using var dbContext = new JobContext(_dbContextOptions);
+            var existingJob = new Job { Description = "Existing Job" };
+            dbContext.Job.Add(existingJob);
+            dbContext.SaveChanges();
+
+            var jobRepository = new JobRepository(dbContext);
+
+            // Act
+            var result = jobRepository.GetByDescriptionAsync("Existing Job");
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void GetByDescriptionAsync_JobDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            using var dbContext = new JobContext(_dbContextOptions);
+            var existingJob = new Job { Description = "Existing Job" };
+            dbContext.Job.Add(existingJob);
+            dbContext.SaveChanges();
+
+            var jobRepository = new JobRepository(dbContext);
+
+            // Act
+            var result = jobRepository.GetByDescriptionAsync("Non-existing Job");
+
+            // Assert
+            Assert.False(result);
         }
     }
 }
