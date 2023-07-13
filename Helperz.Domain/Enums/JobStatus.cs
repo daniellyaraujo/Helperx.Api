@@ -16,6 +16,11 @@ namespace Helperz.Domain.Enums
         /// <summary>
         /// Job become concluded when the job is executed with success.
         /// </summary>
-        Concluded = 2
+        Concluded = 2,
+
+        /// <summary>
+        /// Work gets delayed when not done on time.
+        /// </summary>
+        Late = 3
     }
 }

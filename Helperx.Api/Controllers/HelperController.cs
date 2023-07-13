@@ -1,4 +1,5 @@
-﻿using Helperx.Application.Services;
+﻿using Helperx.Application.Contracts;
+using Helperx.Application.Services;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +60,7 @@ namespace Helperx.Api.Controllers
         [HttpPut("update/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<JobResponse> PutAsync([FromRoute] int id, [FromBody] JobRequest jobDescription)
+        public async Task<JobResponse> PutAsync([FromRoute] int id, [FromBody] UpdateJobRequest jobDescription)
         {
             var response = await _helperService.UpdateJobByIdAsync(id, jobDescription);
             return response;

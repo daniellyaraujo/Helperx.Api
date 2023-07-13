@@ -1,4 +1,5 @@
-﻿using Helperz.Application.Contracts;
+﻿using Helperx.Application.Contracts;
+using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 
 namespace Helperx.Application.Services
@@ -7,11 +8,11 @@ namespace Helperx.Application.Services
     {
         Task ExecuteJobsPendingAsync();
         Task ProcessJobs(List<Job> jobsPending);
-        Task<JobResponse> CreateAsync(Job jobRequest);
+        Task UpdatesJobStatusByQueueAsync(Job jobRequest);
         Task<JobResponse> RegisterJobAsync(JobRequest jobRequest);
         List<Job> GetAllJobsAsync();
         List<Job> GetAllPendingJobsAsync();
-        Task<JobResponse> UpdateJobByIdAsync(int jobId, JobRequest jobRequest);
+        Task<JobResponse> UpdateJobByIdAsync(int jobId, UpdateJobRequest jobRequest);
         Task<JobResponse> RemoveJobByIdAsync(int jobId);
         bool ChecksForDuplicityInJobDescription(string jobDescription);
     }

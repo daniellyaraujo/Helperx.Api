@@ -1,5 +1,7 @@
 ﻿using Helperz.Domain.Entities;
+using Helperz.Domain.Enums;
 using Helperz.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Helperx.Infra.Data.Repository
 {
@@ -14,7 +16,22 @@ namespace Helperx.Infra.Data.Repository
 
         public async Task<Job> GetByIdAsync(int jobId)
         {
-            return (Job)_jobContext.Job!.Where(x => x.Id == jobId);
+            return await _jobContext.Job!.FirstOrDefaultAsync(x => x.Id == jobId);
+        }
+
+        public bool GetByDescriptionAsync(string description)
+        {
+            return _jobContext.Job!.Any(x => x.Description == description);
+        }
+
+        public List<Job> GetAllPendingAsync()
+        {
+            return _jobContext.Job.Where(x => x.Status == JobStatus.Pending).OrderBy(x => x.ExecutionTime).ToList();
+        }
+
+        public List<Job> GetAllLateAsync()
+        {
+            return _jobContext.Job.Where(x => x.Status == JobStatus.Late).OrderBy(x => x.ExecutionTime).ToList();
         }
 
         public List<Job> GetAll()

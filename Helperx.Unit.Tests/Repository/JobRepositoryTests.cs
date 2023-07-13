@@ -70,7 +70,7 @@ namespace Helperx.Unit.Tests.Repository
         {
             // Arrange
             using var dbContext = new JobContext(_dbContextOptions);
-            var job = new Job {Description = "Test Job" };
+            var job = new Job { Description = "Test Job" };
             var jobRepository = new JobRepository(dbContext);
             await dbContext.Job.AddAsync(job);
             await dbContext.SaveChangesAsync();

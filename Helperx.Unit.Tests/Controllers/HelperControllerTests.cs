@@ -1,8 +1,8 @@
 ﻿using Helperx.Api.Controllers;
+using Helperx.Application.Contracts;
 using Helperx.Application.Services;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Moq;
 
 namespace Helperx.Unit.Tests.Controllers
@@ -22,7 +22,7 @@ namespace Helperx.Unit.Tests.Controllers
         public async Task GetAsync_ReturnsListOfJobs()
         {
             // Arrange
-            var expectedJobs = new List<Job> {  };
+            var expectedJobs = new List<Job> { };
             _helperServiceMock.Setup(service => service.GetAllJobsAsync()).Returns(await Task.FromResult(expectedJobs));
 
             // Act
@@ -54,8 +54,8 @@ namespace Helperx.Unit.Tests.Controllers
         public async Task PostAsync_ReturnsJobResponse_WhenJobRegistrationIsSuccessful()
         {
             // Arrange
-            var jobRequest = new JobRequest {IsScheduleJob = true, Description = "Teste", ExecutionTime = DateTime.UtcNow };
-            var expectedResponse = new JobResponse {  };
+            var jobRequest = new JobRequest { IsScheduleJob = true, Description = "Teste", ExecutionTime = DateTime.UtcNow };
+            var expectedResponse = new JobResponse { };
             _helperServiceMock.Setup(service => service.RegisterJobAsync(jobRequest)).Returns(Task.FromResult(expectedResponse));
 
             // Act
@@ -72,8 +72,8 @@ namespace Helperx.Unit.Tests.Controllers
         {
             // Arrange
             var id = 1;
-            var jobRequest = new JobRequest {IsScheduleJob = true, Description = "Teste", ExecutionTime = DateTime.UtcNow };
-            var expectedResponse = new JobResponse {  };
+            var jobRequest = new UpdateJobRequest { IsScheduleJob = true, Description = "Teste", ExecutionTime = DateTime.UtcNow, CompletedJob = Helperz.Domain.Enums.JobStatus.Concluded };
+            var expectedResponse = new JobResponse { };
             _helperServiceMock.Setup(service => service.UpdateJobByIdAsync(id, jobRequest)).Returns(Task.FromResult(expectedResponse));
 
             // Act
@@ -90,7 +90,7 @@ namespace Helperx.Unit.Tests.Controllers
         {
             // Arrange
             var id = 1;
-            var expectedResponse = new JobResponse {  };
+            var expectedResponse = new JobResponse { };
             _helperServiceMock.Setup(service => service.RemoveJobByIdAsync(id)).Returns(Task.FromResult(expectedResponse));
 
             // Act
