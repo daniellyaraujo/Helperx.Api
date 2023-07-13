@@ -32,7 +32,7 @@ namespace Helperx.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<List<Job>> GetAsync()
         {
-            var response = await _iHelperService.GetAllJobsAsync();
+            var response = _iHelperService.GetAllJobsAsync();
             return response;
         }
 
@@ -47,7 +47,7 @@ namespace Helperx.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<JobResponse> PostAsync([FromBody] JobRequest jobDescription)
         {
-            var response = await _iHelperService.RegisterJobInQueueAsync(jobDescription);
+            var response = await _iHelperService.RegisterJobAsync(jobDescription);
             return response;
         }
 

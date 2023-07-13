@@ -4,7 +4,7 @@ using Helperx.Infra.Data;
 using Helperx.Infra.Data.Repository;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
-using Helperz.Domain.Interfaces.Repository;
+using Helperz.Domain.Interfaces;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;

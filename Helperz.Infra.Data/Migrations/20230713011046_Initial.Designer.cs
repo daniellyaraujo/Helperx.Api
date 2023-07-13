@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Helperz.Infra.Data.Migrations
 {
     [DbContext(typeof(JobContext))]
-    [Migration("20230712203948_Initial")]
+    [Migration("20230713011046_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -32,9 +32,6 @@ namespace Helperz.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Action")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()

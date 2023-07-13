@@ -1,5 +1,5 @@
 ﻿using Helperz.Domain.Entities;
-using Helperz.Domain.Interfaces.Repository;
+using Helperz.Domain.Interfaces;
 
 namespace Helperx.Infra.Data.Repository
 {
@@ -17,12 +17,12 @@ namespace Helperx.Infra.Data.Repository
             _jobContext.Dispose();
         }
 
-        public async Task<Job> GetJobByIdAsync(int jobId)
+        public async Task<Job> GetByIdAsync(int jobId)
         {
             return (Job)_jobContext.Job!.Where(x => x.Id == jobId);
         }
         
-        public List<Job> GetJobs()
+        public List<Job> GetAll()
         {
             return _jobContext.Set<Job>().ToList();
         }

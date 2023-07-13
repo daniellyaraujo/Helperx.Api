@@ -5,7 +5,7 @@ using Helperx.Infra.Data;
 using Helperx.Infra.Data.Repository;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
-using Helperz.Domain.Interfaces.Repository;
+using Helperz.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 IHost host = Host.CreateDefaultBuilder(args)

@@ -18,7 +18,6 @@ namespace Helperz.Infra.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Action = table.Column<int>(type: "int", nullable: false),
                     IsScheduleJob = table.Column<bool>(type: "bit", nullable: false),
                     ExecutionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)

@@ -1,26 +1,20 @@
 ﻿using Helperz.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Helperz.Domain.Entities
 {
     public class Job
     {
         /// <summary>
-        /// Id to identify the task.
+        /// Id to identify the job.
         /// </summary>
         [Key]
         public int Id { get; }
 
         /// <summary>
-        /// Description of what task have to do.
+        /// Description of what job have to do.
         /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        /// Informs what kinf of action is the task: Create, Update, Delete and Read them all.
-        /// </summary>
-        public JobActions Action { get; set; }
 
         /// <summary>
         /// Indicates whether the user wants to schedule the job.
@@ -28,12 +22,12 @@ namespace Helperz.Domain.Entities
         public bool IsScheduleJob { get; set; }
 
         /// <summary>
-        /// Time that user schedule your task to be executed.
+        /// Time that indicates when task be executed.
         /// </summary>
         public DateTime ExecutionTime { get; set; }
 
         /// <summary>
-        /// Status of task
+        /// Status of job: Pending or Concluded.
         /// </summary>
         public JobStatus Status { get; set; }
     }
