@@ -35,7 +35,7 @@ namespace Helperz.Infra.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExecutionTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<bool>("IsScheduleJob")
                         .HasColumnType("bit");

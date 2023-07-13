@@ -19,11 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Data", "4.1 - Data", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Consumer.Jobs", "Helperx.Consumer.Jobs\Helperx.Consumer.Jobs.csproj", "{A62CAAEA-C7D6-448C-8E4F-4695690A2656}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperz.Domain", "Helperz.Domain\Helperz.Domain.csproj", "{767DBFD3-5F77-4302-8B15-CFB78138F5E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Domain", "Helperz.Domain\Helperx.Domain.csproj", "{767DBFD3-5F77-4302-8B15-CFB78138F5E6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperz.Application", "Helperz.Application\Helperz.Application.csproj", "{11E082E9-2565-45A8-8D0F-387462305FAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Application", "Helperz.Application\Helperx.Application.csproj", "{11E082E9-2565-45A8-8D0F-387462305FAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperz.Infra.Data", "Helperz.Infra.Data\Helperz.Infra.Data.csproj", "{12AA59A1-04D8-4171-B5B3-755D86993C8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Infra.Data", "Helperz.Infra.Data\Helperx.Infra.Data.csproj", "{12AA59A1-04D8-4171-B5B3-755D86993C8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helperx.Unit.Tests", "Helperx.Unit.Tests\Helperx.Unit.Tests.csproj", "{B654863C-9F11-42DF-91DA-4E10FDD6C035}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{12AA59A1-04D8-4171-B5B3-755D86993C8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AA59A1-04D8-4171-B5B3-755D86993C8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12AA59A1-04D8-4171-B5B3-755D86993C8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B654863C-9F11-42DF-91DA-4E10FDD6C035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B654863C-9F11-42DF-91DA-4E10FDD6C035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B654863C-9F11-42DF-91DA-4E10FDD6C035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B654863C-9F11-42DF-91DA-4E10FDD6C035}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{767DBFD3-5F77-4302-8B15-CFB78138F5E6} = {B5EBA33C-2C7F-45DE-877A-B0CE93F4D135}
 		{11E082E9-2565-45A8-8D0F-387462305FAD} = {ACF18B20-A583-4948-B2E9-6114C87A429A}
 		{12AA59A1-04D8-4171-B5B3-755D86993C8D} = {FFDCB5B2-D93B-4DE2-B371-3151D8254D89}
+		{B654863C-9F11-42DF-91DA-4E10FDD6C035} = {F303FEED-2311-4722-9283-05B95DC15A6C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A5866288-428C-483A-B21D-2FF053F012CE}

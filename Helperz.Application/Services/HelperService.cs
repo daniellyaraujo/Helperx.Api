@@ -159,25 +159,21 @@ namespace Helperx.Application.Services
                 return response;
             }
 
-            if (job.Status == JobStatus.Pending)
-            {
-                job.IsScheduleJob = jobRequest.IsScheduleJob;
-                job.Description = jobRequest.Description;
-                job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
-
-                await _jobRepository.UpdateAsync(job);
-
-                response.JobStatus = JobStatus.Concluded;
-                response.StatusCode = HttpStatusCode.OK;
-                return response;
-            }
-
-            if (job.Status == JobStatus.Concluded)
+            if (job.Status != JobStatus.Pending || job.Status == JobStatus.Concluded)
             {
                 response.Message = JobResponseMessages.ALREADY_COMPLETED_JOB;
                 response.StatusCode = HttpStatusCode.BadRequest;
                 return response;
             }
+
+            job.IsScheduleJob = jobRequest.IsScheduleJob;
+            job.Description = jobRequest.Description;
+            job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
+
+            await _jobRepository.UpdateAsync(job);
+
+            response.JobStatus = JobStatus.Concluded;
+            response.StatusCode = HttpStatusCode.OK;
 
             return response;
         }
@@ -192,7 +188,7 @@ namespace Helperx.Application.Services
             var response = new JobResponse();
 
             Job job = await _jobRepository.GetByIdAsync(jobId);
-            if (job.Description != null)
+            if (job.Description == null)
             {
                 response.Message = JobResponseMessages.NOT_FOUND_JOB;
                 response.StatusCode = HttpStatusCode.BadRequest;
