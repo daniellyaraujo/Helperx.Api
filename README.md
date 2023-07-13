@@ -4,9 +4,8 @@ Olá!
 
 Este projeto precisa ser configurado com um banco de dados local, voce pode usar o MSSQL com a autenticação do windows para acessar ou no proprio visual studio voce consegue visualizar a tabela!
 
-![image](https://github.com/daniellyaraujo/Helperx.Api/assets/48495720/d2fa4fd3-3d7e-48ac-9663-ec9ccbbd1377)
 ![image](https://github.com/daniellyaraujo/Helperx.Api/assets/48495720/d3a0bdc2-7c84-4c59-9ff1-b46e93d4947a)
-
+![image](https://github.com/daniellyaraujo/Helperx.Api/assets/48495720/d2fa4fd3-3d7e-48ac-9663-ec9ccbbd1377)
 
 O projeto ainda não esta configurado pra executar no docker, mas voce pode fazer o dowload e iniciar a api e o consumer juntos fazendo assim:
 
