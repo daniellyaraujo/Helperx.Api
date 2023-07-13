@@ -5,7 +5,6 @@ using Helperx.Infra.Data.Repository;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Helperz.Domain.Interfaces;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
@@ -26,7 +25,8 @@ namespace Helperx.Api.Configuration
             serviceCollection.AddScoped<IHelperService, HelperService>();
 
             //Job Context
-            serviceCollection.AddDbContext<JobContext>((options) => {
+            serviceCollection.AddDbContext<JobContext>((options) =>
+            {
                 options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
             });
 
@@ -42,7 +42,7 @@ namespace Helperx.Api.Configuration
             serviceCollection.AddScoped<IJobRepository, JobRepository>();
 
             serviceCollection.AddEndpointsApiExplorer();
-;            //Swagger
+            ;            //Swagger
             serviceCollection.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Helper X Api", Version = "v1" });

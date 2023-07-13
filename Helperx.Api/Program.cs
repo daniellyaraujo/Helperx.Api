@@ -1,5 +1,4 @@
 using Helperx.Api.Configuration;
-using Helperx.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

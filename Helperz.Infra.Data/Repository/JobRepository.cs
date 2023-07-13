@@ -21,7 +21,7 @@ namespace Helperx.Infra.Data.Repository
         {
             return (Job)_jobContext.Job!.Where(x => x.Id == jobId);
         }
-        
+
         public List<Job> GetAll()
         {
             return _jobContext.Set<Job>().ToList();
@@ -38,7 +38,7 @@ namespace Helperx.Infra.Data.Repository
             _jobContext.Job!.Update(job);
             await _jobContext.SaveChangesAsync(cancellationToken);
         }
-        
+
         public async Task DeleteAsync(Job job, CancellationToken cancellationToken = default)
         {
             _jobContext.Job!.Remove(job);
