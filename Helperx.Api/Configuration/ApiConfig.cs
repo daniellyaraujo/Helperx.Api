@@ -24,7 +24,7 @@ namespace Helperx.Api.Configuration
             //Services
             serviceCollection.AddScoped<IHelperService, HelperService>();
 
-            //Job Context
+            //Context
             serviceCollection.AddDbContext<JobContext>((options) =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
@@ -42,12 +42,12 @@ namespace Helperx.Api.Configuration
             serviceCollection.AddScoped<IJobRepository, JobRepository>();
 
             serviceCollection.AddEndpointsApiExplorer();
-            ;            //Swagger
+
+            //Swagger
             serviceCollection.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Helper X Api", Version = "v1" });
 
-                // Configuração para incluir os comentários XML da documentação do projeto
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
