@@ -66,14 +66,11 @@ namespace Helperx.Application.Services
         /// </summary>
         /// <param name="jobRequest"></param>
         /// <returns></returns>
-        public async Task<JobResponse> CreateAsync(Job jobRequest)
+        public async Task<JobResponse> CreateAsync(Job job)
         {
             var response = new JobResponse();
-            var job = new Job();
 
-            _mapper.Map(jobRequest, job);
-
-            if (jobRequest.ExecutionTime > DateTime.UtcNow)
+            if (job.ExecutionTime > DateTime.UtcNow)
             {
                 _logger.LogInformation("Checked that the job is late.");
                 response.Message = JobResponseMessages.LATE_JOB;
@@ -81,8 +78,6 @@ namespace Helperx.Application.Services
 
             _logger.LogInformation("Successfully creating the job and changing the status to completed.");
             job.Status = JobStatus.Concluded;
-            job.IsScheduleJob = jobRequest.IsScheduleJob;
-            job.ExecutionTime = jobRequest.ExecutionTime;
 
             _logger.LogInformation("Updating the status of job in the database.");
             await _jobRepository.CreateAsync(job);
