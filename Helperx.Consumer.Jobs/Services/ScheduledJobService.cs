@@ -22,7 +22,7 @@ namespace Helperx.Application.ConsumerServices
             return Task.CompletedTask;
         }
 
-        private async void ExecuteAsync(object state)
+        public async void ExecuteAsync(object state)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {

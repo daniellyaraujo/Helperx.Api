@@ -7,8 +7,14 @@ using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Helperz.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
-IHost host = Host.CreateDefaultBuilder(args)
+[ExcludeFromCodeCoverage]
+public class Program
+{
+    private static async Task Main(string[] args)
+    {
+        IHost host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
             {
                 services.AddScoped<IJobRepository, JobRepository>();
@@ -29,4 +35,6 @@ IHost host = Host.CreateDefaultBuilder(args)
             })
             .Build();
 
-await host.RunAsync();
+        await host.RunAsync();
+    }
+}
