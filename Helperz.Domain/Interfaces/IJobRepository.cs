@@ -6,8 +6,7 @@ namespace Helperz.Domain.Interfaces
     {
         List<Job> GetAll();
         Task<Job> GetByIdAsync(int jobId);
-        List<Job> GetAllPendingAsync();
-        List<Job> GetAllLateAsync();
+        Task UpdatePendingJobsToLateStatusAsync(CancellationToken cancellationToken = default);
         bool GetByDescriptionAsync(string description);
         Task CreateAsync(Job job, CancellationToken cancellationToken = default);
         Task UpdateAsync(Job job, CancellationToken cancellationToken = default);

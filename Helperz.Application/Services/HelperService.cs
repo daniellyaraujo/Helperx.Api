@@ -34,51 +34,6 @@ namespace Helperx.Application.Services
         }
 
         /// <summary>
-        /// Gets the list of pending jobs and sends them for processing.
-        /// </summary>
-        /// <returns></returns>
-        public async Task ExecuteJobsPendingAsync()
-        {
-            _logger.LogInformation("Starting the query of the list of pending jobs.");
-            var jobs = GetAllPendingJobsAsync();
-
-            _logger.LogInformation("Submitting the list of jobs for processing.");
-            await ProcessJobs(jobs);
-        }
-
-        /// <summary>
-        /// Processes the list of pending jobs by sending them to be updated.
-        /// </summary>
-        /// <param name="jobsPending"></param>
-        /// <returns></returns>
-        public async Task ProcessJobs(List<Job> jobsPending)
-        {
-            _logger.LogInformation("Processing one by one from the queue.");
-            foreach (var job in jobsPending)
-            {
-                _logger.LogInformation($"Submitting {job} to be updated.");
-                await UpdatesJobStatusByQueueAsync(job);
-            }
-        }
-
-        /// <summary>
-        /// Updates work that came from the queue in the database.
-        /// </summary>
-        /// <param name="jobRequest"></param>
-        /// <returns></returns>
-        public async Task UpdatesJobStatusByQueueAsync(Job job)
-        {
-            if (job.IsScheduleJob && job.Status == JobStatus.Pending)
-            {
-                _logger.LogInformation("Checked that the job is late.");
-                job.Status = JobStatus.Late;
-            }
-
-            _logger.LogInformation("");
-            await _jobRepository.UpdateAsync(job);
-        }
-
-        /// <summary>
         /// Registers the job in the database.
         /// </summary>
         /// <param name="jobRequest"></param>
@@ -102,6 +57,7 @@ namespace Helperx.Application.Services
 
             _logger.LogInformation("Creating job in the database with pending status.");
             job.Status = JobStatus.Pending;
+
             await _jobRepository.CreateAsync(job);
 
             response.JobStatus = JobStatus.Pending;
@@ -194,40 +150,13 @@ namespace Helperx.Application.Services
         }
 
         /// <summary>
-        /// Queries all jobs that are in pending status in the database.
-        /// </summary>
-        /// <returns></returns>
-        public List<Job> GetAllPendingJobsAsync()
-        {
-            _logger.LogInformation("Querying all jobs with a pending status in the database.");
-            List<Job> jobs = _jobRepository.GetAllPendingAsync();
-
-            _logger.LogInformation("Returning all jobs with a pending status in a list.");
-            return jobs;
-        }
-
-        /// <summary>
-        /// Queries all jobs that are in late status in the database.
-        /// </summary>
-        /// <returns></returns>
-        public List<Job> VerifyLateJobsAsync()
-        {
-            _logger.LogInformation("Querying all jobs with a late status in the database.");
-            List<Job> jobs = _jobRepository.GetAllLateAsync();
-
-            _logger.LogInformation("Returning all jobs with a late status in a list.");
-            return jobs;
-        }
-
-        /// <summary>
         /// Checks if there is duplicity between any existing job and the new job entered.
         /// </summary>
         /// <param name="jobDescription"></param>
         /// <returns></returns>
         public bool ChecksForDuplicityInJobDescription(string jobDescription)
         {
-            bool duplicity = _jobRepository.GetByDescriptionAsync(jobDescription);
-            return duplicity;
+           return _jobRepository.GetByDescriptionAsync(jobDescription);
         }
     }
 }

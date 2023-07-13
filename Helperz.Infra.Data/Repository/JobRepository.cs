@@ -24,9 +24,13 @@ namespace Helperx.Infra.Data.Repository
             return _jobContext.Job!.Any(x => x.Description == description);
         }
 
-        public List<Job> GetAllPendingAsync()
+        public async Task UpdatePendingJobsToLateStatusAsync(CancellationToken cancellationToken = default)
         {
-            return _jobContext.Job.Where(x => x.Status == JobStatus.Pending).OrderBy(x => x.ExecutionTime).ToList();
+            await _jobContext.Job!.
+                 Where(x => x.Status == JobStatus.Pending && x.IsScheduleJob && x.ExecutionTime < DateTime.UtcNow)
+                .ExecuteUpdateAsync(x => x.SetProperty(c => c.Status, c => JobStatus.Late));
+
+            await _jobContext.SaveChangesAsync(cancellationToken);
         }
 
         public List<Job> GetAllLateAsync()

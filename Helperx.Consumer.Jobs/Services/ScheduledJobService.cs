@@ -1,4 +1,4 @@
-﻿using Helperx.Application.Services;
+﻿using Helperz.Domain.Interfaces;
 
 namespace Helperx.Application.ConsumerServices
 {
@@ -25,9 +25,9 @@ namespace Helperx.Application.ConsumerServices
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var helperService = scope.ServiceProvider.GetRequiredService<IHelperService>();
+                var jobRepository = scope.ServiceProvider.GetRequiredService<IJobRepository>();
 
-                await helperService.ExecuteJobsPendingAsync();
+                await jobRepository.UpdatePendingJobsToLateStatusAsync();
             }
         }
 
