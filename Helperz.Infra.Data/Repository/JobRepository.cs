@@ -12,11 +12,6 @@ namespace Helperx.Infra.Data.Repository
             _jobContext = taskContext;
         }
 
-        public void Dispose()
-        {
-            _jobContext.Dispose();
-        }
-
         public async Task<Job> GetByIdAsync(int jobId)
         {
             return (Job)_jobContext.Job!.Where(x => x.Id == jobId);
