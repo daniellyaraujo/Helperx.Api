@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Helperz.Infra.Data.Migrations
 {
     [DbContext(typeof(JobContext))]
-    [Migration("20230712172437_inittial")]
-    partial class inittial
+    [Migration("20230712203948_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,11 @@ namespace Helperz.Infra.Data.Migrations
 
             modelBuilder.Entity("Helperz.Domain.Entities.Job", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Action")
                         .HasColumnType("int");
@@ -40,6 +42,9 @@ namespace Helperz.Infra.Data.Migrations
 
                     b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsScheduleJob")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

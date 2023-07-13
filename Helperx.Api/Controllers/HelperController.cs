@@ -47,7 +47,7 @@ namespace Helperx.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<JobResponse> PostAsync([FromBody] JobRequest jobDescription)
         {
-            var response = await _iHelperService.RegisterNewJobAsync(jobDescription);
+            var response = await _iHelperService.RegisterJobInQueueAsync(jobDescription);
             return response;
         }
 
@@ -57,7 +57,7 @@ namespace Helperx.Api.Controllers
         /// <param name="id"></param>
         /// <param name="jobDescription"></param>
         /// <returns></returns>
-        [HttpPut("edit/{id}")]
+        [HttpPut("update/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

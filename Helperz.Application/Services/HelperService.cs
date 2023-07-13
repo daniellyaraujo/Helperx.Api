@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Helperx.Application.Constants;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
@@ -25,7 +26,65 @@ namespace Helperx.Application.Services
             var jobRequest = new JobRequest();
             _mapper.Map(jobFromQueue, jobRequest);
             
-            await RegisterNewJobAsync(jobRequest);
+            await CreateJobAsync(jobRequest);
+        }
+
+        public async Task<JobResponse> CreateJobAsync(JobRequest jobRequest)
+        {
+            var response = new JobResponse();
+            var job = new Job();
+
+            _mapper.Map(jobRequest, job);
+
+            if (jobRequest.ExecutionTime > DateTime.UtcNow)
+            {
+                response.Message = JobResponseMessages.LATE_JOB;
+            }
+
+            job.Status = JobStatus.Concluded;
+            job.IsScheduleJob = jobRequest.IsScheduleJob;
+            job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
+            job.Action = JobActions.Create;
+
+            await _jobRepository.CreateAsync(job);
+
+            response.JobStatus = JobStatus.Concluded;
+            response.StatusCode = HttpStatusCode.OK;
+
+            return response;
+        }
+
+        public async Task<JobResponse> RegisterJobInQueueAsync(JobRequest jobRequest)
+        {
+            var response = new JobResponse();
+            var job = new Job();
+            _mapper.Map(jobRequest, job);
+
+            if (ChecksForDuplicityInJobDescription(jobRequest.Description))
+            {
+                response.Message = JobResponseMessages.DUPLICITY_JOB;
+                response.StatusCode = HttpStatusCode.BadRequest;
+
+                return response;
+            }
+
+            if (jobRequest.IsScheduleJob)
+            {
+                await _jobRepository.CreateAsync(job);
+
+                response.JobStatus = JobStatus.Pending;
+                response.Message = JobResponseMessages.SENT_JOB_TO_QUEUE;
+                response.StatusCode = HttpStatusCode.Created;
+
+                return response;
+            }
+
+            await CreateJobAsync(jobRequest);
+
+            response.JobStatus = JobStatus.Concluded;
+            response.StatusCode = HttpStatusCode.OK;
+
+            return response;
         }
 
         public async Task<List<Job>> GetAllJobsAsync()
@@ -49,15 +108,23 @@ namespace Helperx.Application.Services
 
             if (job.Status == JobStatus.Pending)
             {
-                //ver como cancelar na fila e enviar dnv
+                job.IsScheduleJob = jobRequest.IsScheduleJob;
+                job.Description = jobRequest.Description;
+                job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
+
+                await _jobRepository.UpdateAsync(job);
+
+                response.JobStatus = JobStatus.Concluded;
+                response.StatusCode = HttpStatusCode.OK;
+                return response;
             }
 
-            job.Status = JobStatus.Concluded;
-            job.Description = jobRequest.Description;
-            job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
-            job.Action = JobActions.Update;
-
-            await _jobRepository.UpdateAsync(job);
+            if (job.Status == JobStatus.Concluded)
+            {
+                response.Message = JobResponseMessages.ALREADY_COMPLETED_JOB;
+                response.StatusCode = HttpStatusCode.BadRequest;
+                return response;
+            }
 
             return response;
         }
@@ -76,62 +143,15 @@ namespace Helperx.Application.Services
 
             await _jobRepository.DeleteAsync(job);
 
-            response.JobStatus = JobStatus.Concluded;
+            response.Message = JobResponseMessages.DELETED_JOB;
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }
-
-        public async Task<JobResponse> RegisterNewJobAsync(JobRequest jobRequest)
-        {
-            var response = new JobResponse();
-            var job = new Job();
-            _mapper.Map(jobRequest, job);
-
-            if (ChecksForDuplicityInJobDescription(jobRequest.Description))
-            {
-                response.JobStatus = JobStatus.Canceled;
-                response.Message = JobResponseMessages.DUPLICITY_JOB;
-                response.StatusCode = HttpStatusCode.BadRequest;
-
-                return response;
-            }
-
-            if (jobRequest.IsScheduleJob)
-            {
-                await _jobRepository.CreateAsync(job);
-
-                response.JobStatus = JobStatus.Pending;
-                response.Message = JobResponseMessages.SENT_JOB_TO_QUEUE;
-                response.StatusCode = HttpStatusCode.Created;
-
-                //await _queueSenderService.SendToQueueAsync(job);
-
-                return response;
-            }
-
-            job.Status = JobStatus.Concluded;
-            job.IsScheduleJob = jobRequest.IsScheduleJob;
-            job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
-            job.Action = JobActions.Create;
-
-            await _jobRepository.CreateAsync(job);
-
-            response.JobStatus = JobStatus.Concluded;
-            response.StatusCode = HttpStatusCode.OK;
-            return response;
-        }
-
+        
         public bool ChecksForDuplicityInJobDescription(string jobDescription)
         {
-            
             bool duplicity = _jobRepository.GetJobs().Any(x => x.Description == jobDescription);
             return duplicity;
-        }
-
-        public bool VerifyJobById(int jobId)
-        {
-            bool job = _jobRepository.GetJobs().Any(x => x.Id == jobId);
-            return job;
         }
     }
 }

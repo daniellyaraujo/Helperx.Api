@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Api", "Helperx.Api\Helperx.Api.csproj", "{BB94F811-AA89-47E1-BA12-59D155C3C731}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solutions Itens", "0 - Solutions Itens", "{15AC8C73-F915-46A7-B2A3-F6644EA7FB59}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Services", "1 - Services", "{F8801265-3580-40F5-BE84-37A791D6DFDC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{ACF18B20-A583-4948-B2E9-6114C87A429A}"
@@ -19,13 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Data", "4.1 - Data", "{FFDCB5B2-D93B-4DE2-B371-3151D8254D89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helperx.Consumer.Jobs", "Helperx.Consumer.Jobs\Helperx.Consumer.Jobs.csproj", "{A62CAAEA-C7D6-448C-8E4F-4695690A2656}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Consumer.Jobs", "Helperx.Consumer.Jobs\Helperx.Consumer.Jobs.csproj", "{A62CAAEA-C7D6-448C-8E4F-4695690A2656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helperz.Domain", "Helperz.Domain\Helperz.Domain.csproj", "{767DBFD3-5F77-4302-8B15-CFB78138F5E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperz.Domain", "Helperz.Domain\Helperz.Domain.csproj", "{767DBFD3-5F77-4302-8B15-CFB78138F5E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helperz.Application", "Helperz.Application\Helperz.Application.csproj", "{11E082E9-2565-45A8-8D0F-387462305FAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperz.Application", "Helperz.Application\Helperz.Application.csproj", "{11E082E9-2565-45A8-8D0F-387462305FAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helperz.Infra.Data", "Helperz.Infra.Data\Helperz.Infra.Data.csproj", "{12AA59A1-04D8-4171-B5B3-755D86993C8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperz.Infra.Data", "Helperz.Infra.Data\Helperz.Infra.Data.csproj", "{12AA59A1-04D8-4171-B5B3-755D86993C8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

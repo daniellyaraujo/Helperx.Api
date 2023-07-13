@@ -24,9 +24,11 @@ namespace Helperz.Infra.Data.Migrations
 
             modelBuilder.Entity("Helperz.Domain.Entities.Job", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Action")
                         .HasColumnType("int");
@@ -37,6 +39,9 @@ namespace Helperz.Infra.Data.Migrations
 
                     b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsScheduleJob")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

@@ -16,11 +16,6 @@ namespace Helperz.Domain.Enums
         /// <summary>
         /// Job become concluded when the job is executed with success.
         /// </summary>
-        Concluded = 2,
-
-        /// <summary>
-        /// Job become canceled when the job is executed with success.
-        /// </summary>
-        Canceled = 3
+        Concluded = 2
     }
 }

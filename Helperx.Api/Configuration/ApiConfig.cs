@@ -22,13 +22,6 @@ namespace Helperx.Api.Configuration
 
             serviceCollection.AddOptions();
 
-            serviceCollection.AddSingleton(serviceProvider =>
-            {
-                return new QueueClient(configuration["ServiceBus:ConnectionString"], configuration["ServiceBus:QueueName"]);
-            });
-
-            serviceCollection.AddSignalR();
-
             //Services
             serviceCollection.AddScoped<IHelperService, HelperService>();
 

@@ -1,15 +1,16 @@
 ﻿using Helperx.Application.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Helperx.Application.ConsumerServices
 {
     public class ScheduledJobService : IHostedService, IDisposable
     {
         private Timer _timer;
-        private readonly IHelperService _helperService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public ScheduledJobService(IHelperService helperService)
+        public ScheduledJobService(IServiceScopeFactory serviceScopeFactory)
         {
-            _helperService = helperService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -18,9 +19,14 @@ namespace Helperx.Application.ConsumerServices
             return Task.CompletedTask;
         }
 
-        private void ExecuteJob(object state)
+        private async void ExecuteJob(object state)
         {
-            _helperService.ProcessJobAsync(state);
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var helperService = scope.ServiceProvider.GetRequiredService<IHelperService>();
+
+                await helperService.ProcessJobAsync(state);
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
