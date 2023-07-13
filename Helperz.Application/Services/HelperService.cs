@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Azure;
 using Helperx.Application.Constants;
 using Helperz.Application.Contracts;
 using Helperz.Domain.Entities;
 using Helperz.Domain.Enums;
 using Helperz.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace Helperx.Application.Services
@@ -15,6 +17,7 @@ namespace Helperx.Application.Services
     {
         private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<HelperService> _logger;
 
         /// <summary>
         /// Constructor of the Job processing service class, which allows the injection of other services.
@@ -22,10 +25,12 @@ namespace Helperx.Application.Services
         /// <param name="jobRepository"></param>
         /// <param name="mapper"></param>
         public HelperService(IJobRepository jobRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<HelperService> logger)
         {
             _jobRepository = jobRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -34,7 +39,10 @@ namespace Helperx.Application.Services
         /// <returns></returns>
         public async Task ExecuteJobsPendingAsync()
         {
+            _logger.LogInformation("Starting the query of the list of pending jobs.");
             var jobs = GetAllPendingJobsAsync();
+
+            _logger.LogInformation("Submitting the list of jobs for processing.");
             await ProcessJobs(jobs);
         }
 
@@ -45,8 +53,10 @@ namespace Helperx.Application.Services
         /// <returns></returns>
         public async Task ProcessJobs(List<Job> jobsPending)
         {
+            _logger.LogInformation("Processing one by one from the queue.");
             foreach (var job in jobsPending)
             {
+                _logger.LogInformation($"Submitting {job} to be created.");
                 await CreateAsync(job);
             }
         }
@@ -65,18 +75,22 @@ namespace Helperx.Application.Services
 
             if (jobRequest.ExecutionTime > DateTime.UtcNow)
             {
+                _logger.LogInformation("Checked that the job is late.");
                 response.Message = JobResponseMessages.LATE_JOB;
             }
 
+            _logger.LogInformation("Successfully creating the job and changing the status to completed.");
             job.Status = JobStatus.Concluded;
             job.IsScheduleJob = jobRequest.IsScheduleJob;
             job.ExecutionTime = jobRequest.ExecutionTime;
 
+            _logger.LogInformation("Updating the status of job in the database.");
             await _jobRepository.CreateAsync(job);
 
             response.JobStatus = JobStatus.Concluded;
             response.StatusCode = HttpStatusCode.OK;
 
+            _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
             return response;
         }
 
@@ -91,32 +105,39 @@ namespace Helperx.Application.Services
             var job = new Job();
             _mapper.Map(jobRequest, job);
 
+            _logger.LogInformation($"Checking for duplicity between the description of the new job: '{jobRequest.Description}', and the existing ones.");
             if (ChecksForDuplicityInJobDescription(jobRequest.Description))
             {
+                _logger.LogInformation("Confirmed duplicity");
                 response.Message = JobResponseMessages.DUPLICITY_JOB;
                 response.StatusCode = HttpStatusCode.BadRequest;
 
+                _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
                 return response;
             }
 
+            _logger.LogInformation("Checking if it's a scheduled job.");
             if (jobRequest.IsScheduleJob)
             {
+                _logger.LogInformation("Creating job in the database with pending status.");
                 await _jobRepository.CreateAsync(job);
 
                 response.JobStatus = JobStatus.Pending;
                 response.Message = JobResponseMessages.SENT_JOB_TO_QUEUE;
                 response.StatusCode = HttpStatusCode.Created;
 
+                _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
                 return response;
             }
 
+            _logger.LogInformation("Creating job in the database with concluded status.");
             job.Status = JobStatus.Concluded;
-
             await CreateAsync(job);
 
             response.JobStatus = JobStatus.Concluded;
             response.StatusCode = HttpStatusCode.OK;
 
+            _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
             return response;
         }
 
@@ -126,7 +147,9 @@ namespace Helperx.Application.Services
         /// <returns></returns>
         public List<Job> GetAllJobsAsync()
         {
+            _logger.LogInformation("Querying all database jobs.");
             List<Job> jobs = _jobRepository.GetAll();
+            _logger.LogInformation("Returning all jobs in a list.");
             return jobs;
         }
 
@@ -136,7 +159,9 @@ namespace Helperx.Application.Services
         /// <returns></returns>
         public List<Job> GetAllPendingJobsAsync()
         {
+            _logger.LogInformation("Querying all jobs with a pending status in the database.");
             List<Job> jobs = _jobRepository.GetAll().Where(x => x.Status == JobStatus.Pending).OrderBy(x => x.ExecutionTime).ToList();
+            _logger.LogInformation("Returning all jobs with a pending status in a list.");
             return jobs;
         }
 
@@ -150,19 +175,26 @@ namespace Helperx.Application.Services
         {
             var response = new JobResponse();
 
+            _logger.LogInformation($"Checking if a job exists by id:{jobId}.");
             Job job = await _jobRepository.GetByIdAsync(jobId);
 
             if (job.Description == null)
             {
                 response.Message = JobResponseMessages.NOT_FOUND_JOB;
                 response.StatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
                 return response;
             }
 
+
+            _logger.LogInformation("Checking if found job has pending or completed status.");
             if (job.Status != JobStatus.Pending || job.Status == JobStatus.Concluded)
             {
                 response.Message = JobResponseMessages.ALREADY_COMPLETED_JOB;
                 response.StatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
                 return response;
             }
 
@@ -170,11 +202,13 @@ namespace Helperx.Application.Services
             job.Description = jobRequest.Description;
             job.ExecutionTime = jobRequest.ExecutionTime ?? DateTime.UtcNow;
 
+            _logger.LogInformation($"Updating the job: {jobId} in the database.");
             await _jobRepository.UpdateAsync(job);
 
             response.JobStatus = JobStatus.Concluded;
             response.StatusCode = HttpStatusCode.OK;
 
+            _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
             return response;
         }
 
@@ -187,18 +221,24 @@ namespace Helperx.Application.Services
         {
             var response = new JobResponse();
 
+            _logger.LogInformation($"Checking if a job exists by id:{jobId}.");
             Job job = await _jobRepository.GetByIdAsync(jobId);
             if (job.Description == null)
             {
                 response.Message = JobResponseMessages.NOT_FOUND_JOB;
                 response.StatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
                 return response;
             }
 
+            _logger.LogInformation($"Deleting the job: {jobId} from the database.");
             await _jobRepository.DeleteAsync(job);
 
             response.Message = JobResponseMessages.DELETED_JOB;
             response.StatusCode = HttpStatusCode.OK;
+
+            _logger.LogInformation($"Return StatusCode: {response.StatusCode}");
             return response;
         }
 
