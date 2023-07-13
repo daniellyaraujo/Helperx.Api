@@ -27,6 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helperx.Infra.Data", "Helpe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helperx.Unit.Tests", "Helperx.Unit.Tests\Helperx.Unit.Tests.csproj", "{B654863C-9F11-42DF-91DA-4E10FDD6C035}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Itens", "0 - Solution Itens", "{D9C39A19-2C2D-4754-9959-A571E5F1F7A0}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

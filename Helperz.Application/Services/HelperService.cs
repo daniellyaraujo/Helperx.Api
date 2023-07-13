@@ -136,7 +136,7 @@ namespace Helperx.Application.Services
         /// <returns></returns>
         public List<Job> GetAllPendingJobsAsync()
         {
-            List<Job> jobs = _jobRepository.GetAll().Where(x => x.Status == JobStatus.Pending).ToList();
+            List<Job> jobs = _jobRepository.GetAll().Where(x => x.Status == JobStatus.Pending).OrderBy(x => x.ExecutionTime).ToList();
             return jobs;
         }
 

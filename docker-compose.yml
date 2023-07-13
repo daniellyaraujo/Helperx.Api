@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: ./Helperx.Api/Helperx.Api
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+  consumer:
+    build:
+      context: ./Helperx.Api/Helperx.Consumer.Jobs
+      dockerfile: Dockerfile.consumer
+    depends_on:
+      - db
+  db:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - MSSQL_TCP_PORT=1433
+      - MSSQL_AGENT_ENABLED=true
+      - SA_PASSWORD=YourPassword
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./db-data:/var/opt/mssql/data
+    command:
+      - /opt/mssql/bin/sqlservr
+      - -m
+      - "SqlCmd"
+      - "-s"
+      - "127.0.0.1"
+      - "-l"
+      - "9"
+      - "-e"
+      - "-Q"
+      - "ALTER LOGIN sa WITH PASSWORD='YourPassword'"
+      - "USE [master];"
+      - "CREATE DATABASE [DB];"
+      - "GO"
